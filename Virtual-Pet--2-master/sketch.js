@@ -5,11 +5,13 @@ var position;
 var feed,addFood;
 var fedTime,lastFed;
 var foodObj;
+var milkI;
 
 function preload(){
   //load images here 
   dogI=loadImage("images/dogImg.png")
   hDog=loadImage("images/dogImg1.png")
+  milkI=loadImage("images/Milk.png")
 }
 
 function setup() {
@@ -23,16 +25,14 @@ function setup() {
 
   feed=createButton("FEED THE DOG")
   feed.position(200,120)
- // feed.mousePressed(feedDog)
+  feed.mousePressed(feedDog)
 
   addFood=createButton("ADD FOOD")
   addFood.position(200,150)
- // addFood.mousePressed(addFoodStock)
+  addFood.mousePressed(addFood)
 
-
-
-  foodStock=database.ref('food')
-  foodStock.on("value",readStock,writeStock)
+  foodObj=new Food()
+  foodObj.getFoodStock()
 }
 
 function draw() {  
@@ -43,6 +43,7 @@ function draw() {
     writeStock(foodS)
     dog.addImage(hDog) }*/
 
+  foodObj.display()
   drawSprites();
 
   //fill("black")
@@ -59,21 +60,26 @@ function draw() {
   }
  
   fill("black")
-  text("FOOD STOCK:"+foodS,50,450)
+  text("FOOD STOCK:"+foodObj.foodStock,50,450)
 
 }
 
 //functions
-function readStock(data){
-  foodS=data.val()
+function addFood(){
+  foodS++;
+  database.ref('/').update({
+    food:foodS})
 }
 
-function writeStock(x){  
-  if(x<=0){
-    x=0
-  }
+function feedDog(){
+  dog.addImage(hDog)
+  //function deductFood()
+
   database.ref('/').update({
-    food:x})
+    Food:foodObj.getFoodStock(),
+    Food:foodObj.updateFoodStock(foodObj.getFoodStock()-1),
+    FeedTime:hour()
+  })
 }
 
 
