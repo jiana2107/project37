@@ -26,8 +26,7 @@ class Food{
       database.ref('food').on("value",(data)=>{
         this.foodStock=data.val()
       })
-     
-    }
+      }
     
   updateFoodStock(x){  
       if(x<=0){
@@ -37,7 +36,27 @@ class Food{
         food:x})
     }
     
-   deductFood(){
-    foodObj=foodObj-1;
-   }
-}
+   deductFood(x){
+    if(x>=0){
+      x=10
+    }
+    database.ref('/').update({
+      food:x})
+  }
+
+  getState(){
+    readState=database.ref('gameState');
+    readState.on("value",function(data){
+      gameState=data.val();
+    })
+  }
+
+  update(state){
+    database.ref('/').update({
+      gameState: state
+    });
+  }
+
+
+  }
+  
